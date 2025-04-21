@@ -14,12 +14,26 @@ router.get("/:id/vacancies", (req, res, next) => {
 });
 
 router.post("/", (req, res, next) => {
+  const project = {
+    name: req.body.name,
+    field: req.body.field,
+    experience: req.body.experience,
+    deadline: req.body.deadline,
+    desc: req.body.description,
+  };
   res.status(201).json({
     message: "You have created a project!",
+    createdProject: project,
   });
 });
 
 router.post("/:id/vacancies", (req, res, next) => {
+  const vacancy = {
+    name: req.body.name,
+    field: req.body.field,
+    req_experience: req.body.experience,
+    country: req.body.country,
+  };
   res.status(201).json({
     message: "You have added a vacancy to a project!",
   });
