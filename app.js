@@ -1,6 +1,19 @@
 const express = require("express");
 const app = express();
 const morgan = require("morgan");
+const mongoose = require("mongoose");
+
+const uri =
+  "mongodb+srv://invisibledogeock:" +
+  process.env.ATLAS_PWD +
+  "@cluster0.a8rfnm9.mongodb.net/?authSource=admin&retryWrites=true&w=majority&appName=Cluster0";
+
+run().catch((err) => console.log(err));
+async function run() {
+  await mongoose.connect(uri).then(() => {
+    console.log("Connected!");
+  });
+}
 
 const projectRoutes = require("./api/routes/projects");
 const vacancyRoutes = require("./api/routes/vacancies");
