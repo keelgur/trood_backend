@@ -2,10 +2,10 @@ const mongoose = require("mongoose");
 
 const vacancySchema = new mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
-  name: String,
-  field: String,
-  experience: String,
-  country: String,
+  name: { type: String, required: true },
+  field: { type: String, required: true },
+  experience: { type: String, default: "0 years", required: true },
+  country: { type: String, required: true },
   description: { type: String, default: "" },
 });
 

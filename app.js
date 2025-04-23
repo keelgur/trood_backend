@@ -3,11 +3,13 @@ const app = express();
 const morgan = require("morgan");
 const mongoose = require("mongoose");
 
+// Concatenating private token with connection URI
 const uri =
   "mongodb+srv://invisibledogeock:" +
   process.env.ATLAS_PWD +
-  "@cluster0.a8rfnm9.mongodb.net/?authSource=admin&retryWrites=true&w=majority&appName=Cluster0";
+  "@cluster0.a8rfnm9.mongodb.net/Projects&Vacancies?authSource=admin&retryWrites=true&w=majority&appName=Cluster0";
 
+// Connecting to the DB
 run().catch((err) => console.log(err));
 async function run() {
   await mongoose.connect(uri).then(() => {
@@ -18,12 +20,12 @@ async function run() {
 const projectRoutes = require("./api/routes/projects");
 const vacancyRoutes = require("./api/routes/vacancies");
 
-//Setting up logging middleware
+// Setting up logging middleware
 app.use(morgan("dev"));
-//Setting up parsing middleware
+// Setting up parsing middleware
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-//Handling CORS
+// Handling CORS
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
@@ -37,16 +39,18 @@ app.use((req, res, next) => {
   next();
 });
 
-//Setting up routing
+// Setting up routes
 app.use("/projects", projectRoutes);
 app.use("/vacancies", vacancyRoutes);
 
+// Handling not found response errors
 app.use((req, res, next) => {
   const err = new Error("Not found");
   err.status = 404;
   next(err);
 });
 
+// Handling internal and other errors
 app.use((error, req, res, next) => {
   res.status(error.status || 500);
   res.json({
