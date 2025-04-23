@@ -12,7 +12,6 @@ router.get("/", (req, res, next) => {
       res.status(200).json(docs);
     })
     .catch((err) => {
-      // console.log(err);
       res.status(500).json({ error: err });
     });
 });
@@ -31,8 +30,14 @@ router.get("/:id/vacancies", (req, res, next) => {
       }
     })
     .catch((err) => {
-      console.log(err);
-      res.status(500).json({ error: err });
+      if (err.name === "CastError") {
+        res.status(400).json({
+          message: "Invalid ObjectId was requested.",
+          id: err.value._id,
+        });
+      } else {
+        res.status(500).json({ error: err });
+      }
     });
 });
 
@@ -71,24 +76,36 @@ router.post("/:id/vacancies", (req, res, next) => {
     description: req.body.description,
   });
 
-  Project.updateOne({ _id: id }, { $push: { vacancies: vacancy } }).then(
-    (res) => {
-      console.log(res);
-    }
-  );
-
-  vacancy
-    .save()
+  Project.updateOne({ _id: id }, { $push: { vacancies: vacancy } })
     .then((result) => {
-      // console.log(result);
-      res.status(201).json({
-        message: "You have added a vacancy to a project!",
-        createdVacancy: result._id,
-      });
+      if (result.matchedCount === 0) {
+        res.status(404).json({
+          message: "Not found project with supplied ID.",
+          givenID: id,
+        });
+      } else {
+        vacancy
+          .save()
+          .then((result) => {
+            res.status(201).json({
+              message: "You have added a vacancy to a project!",
+              createdVacancy: result._id,
+            });
+          })
+          .catch((err) => {
+            res.status(500).json({ error: err });
+          });
+      }
     })
     .catch((err) => {
-      console.log(err);
-      res.status(500).json({ error: err });
+      if (err.name === "CastError") {
+        res.status(400).json({
+          message: "Invalid ObjectId was requested.",
+          id: err.value._id,
+        });
+      } else {
+        res.status(500).json({ error: err });
+      }
     });
 });
 
@@ -122,7 +139,14 @@ router.put("/:id", (req, res, next) => {
       }
     })
     .catch((err) => {
-      res.status(500).json({ error: err });
+      if (err.name === "CastError") {
+        res.status(400).json({
+          message: "Invalid ObjectId was requested.",
+          id: err.value._id,
+        });
+      } else {
+        res.status(500).json({ error: err });
+      }
     });
 });
 
@@ -131,11 +155,24 @@ router.delete("/:id", (req, res, next) => {
   Project.deleteOne({ _id: id })
     .exec()
     .then((result) => {
-      res.status(200).json(result);
+      if (result.deletedCount !== 0) {
+        res.status(200).json(result);
+      } else {
+        res.status(404).json({
+          message: "Not found project with supplied ID.",
+          givenID: id,
+        });
+      }
     })
     .catch((err) => {
-      console.log(err);
-      res.status(500).json({ error: err });
+      if (err.name === "CastError") {
+        res.status(400).json({
+          message: "Invalid ObjectId was requested.",
+          id: err.value._id,
+        });
+      } else {
+        res.status(500).json({ error: err });
+      }
     });
 });
 

@@ -33,7 +33,14 @@ router.put("/:id", (req, res, next) => {
       }
     })
     .catch((err) => {
-      res.status(500).json({ error: err });
+      if (err.name === "CastError") {
+        res.status(400).json({
+          message: "Invalid ObjectId was requested.",
+          id: err.value._id,
+        });
+      } else {
+        res.status(500).json({ error: err });
+      }
     });
 });
 
@@ -45,8 +52,14 @@ router.delete("/:id", (req, res, next) => {
       res.status(200).json(result);
     })
     .catch((err) => {
-      console.log(err);
-      res.status(500).json({ error: err });
+      if (err.name === "CastError") {
+        res.status(400).json({
+          message: "Invalid ObjectId was requested.",
+          id: err.value._id,
+        });
+      } else {
+        res.status(500).json({ error: err });
+      }
     });
 });
 
