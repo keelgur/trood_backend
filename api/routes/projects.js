@@ -156,7 +156,10 @@ router.delete("/:id", (req, res, next) => {
     .exec()
     .then((result) => {
       if (result.deletedCount !== 0) {
-        res.status(200).json(result);
+        res.status(200).json({
+          message: "Successfully deleted the project!",
+          deletedId: id,
+        });
       } else {
         res.status(404).json({
           message: "Not found project with supplied ID.",

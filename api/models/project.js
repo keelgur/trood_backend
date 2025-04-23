@@ -6,8 +6,8 @@ const projectSchema = new mongoose.Schema({
   field: String,
   experience: String,
   deadline: String,
-  description: String,
-  vacancies: Array,
+  description: { type: String, default: "" },
+  vacancies: { type: Array, required: true },
 });
 
 module.exports = mongoose.model("Project", projectSchema);

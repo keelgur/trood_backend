@@ -49,7 +49,16 @@ router.delete("/:id", (req, res, next) => {
   Vacancy.deleteOne({ _id: id })
     .exec()
     .then((result) => {
-      res.status(200).json(result);
+      if (result.deletedCount !== 0)
+        res.status(200).json({
+          message: "Successfully deleted the vacancy!",
+          deletedId: id,
+        });
+      else
+        res.status(404).json({
+          message: "Not found vacancy with supplied ID.",
+          givenID: id,
+        });
     })
     .catch((err) => {
       if (err.name === "CastError") {

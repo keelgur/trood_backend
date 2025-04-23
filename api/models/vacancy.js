@@ -6,7 +6,7 @@ const vacancySchema = new mongoose.Schema({
   field: String,
   experience: String,
   country: String,
-  description: String,
+  description: { type: String, default: "" },
 });
 
 module.exports = mongoose.model("Vacancy", vacancySchema);
