@@ -41,3 +41,7 @@ DELETE {{url}}/vacancies/{{notFoundObjectID}} | response: 404 Not Found | respon
 DELETE {{url}}/vacancies/{{foundObjectID}} | response: 200 OK | {"message": "Successfully deleted the vacancy!" }
 ```
 
+## Deployment
+Deployment of the app is powered by Render
+Link - `https://trood-backend-jbot.onrender.com`
+Responses can be a little slow due to the technical issues
